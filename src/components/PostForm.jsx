@@ -4,9 +4,9 @@ import MyInput from "../UI/input/MyInput";
 
 const PostForm = ({create}) => {
 
-    const [post ,setPost] = useState({title: '', body: ''})
+    const [post ,setPost] = useState({name: '', surname: '', patronymic: '', group: '', faculty: ''})
 
-    const addNewPost =(event) => {
+    const addStudent =(event) => {
         event.preventDefault()
 
         const newPost =
@@ -15,20 +15,30 @@ const PostForm = ({create}) => {
             id: Date.now()
         }
         create(newPost)
-        setPost({title: '', body: ''})
+        setPost({name: '', surname: '', patronymic: '', group: '', faculty: ''})
     
       }
 
     return(
         <div>
              <form>
-                <MyInput type='text' placeholder='Название поста' 
-                value={post.title} onChange={e => setPost({...post, title: e.target.value})}></MyInput>
+                <MyInput type='text' placeholder='Имя' 
+                value={post.name} onChange={e => setPost({...post, name: e.target.value})}></MyInput>
 
-                <MyInput type='text' placeholder='Описание поста'
-                value={post.body} onChange={e => setPost({...post, body: e.target.value})}></MyInput>
+                <MyInput type='text' placeholder='Фамилия'
+                value={post.surname} onChange={e => setPost({...post, surname: e.target.value})}></MyInput>
 
-                <MyButton onClick={addNewPost}>Создать пост</MyButton>
+                <MyInput type='text' placeholder='Отчество'
+                value={post.patronymic} onChange={e => setPost({...post, patronymic: e.target.value})}></MyInput>
+
+                <MyInput type='text' placeholder='Факультет'
+                value={post.faculty} onChange={e => setPost({...post, faculty: e.target.value})}></MyInput>
+
+
+                <MyInput type='text' placeholder='Группа'
+                value={post.group} onChange={e => setPost({...post, group: e.target.value})}></MyInput>
+
+                <MyButton onClick={addStudent}>Добавить</MyButton>
             </form>
         </div>
     )

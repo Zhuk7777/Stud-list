@@ -1,8 +1,15 @@
 .myBtn {
     padding: 5px 15px;
-    color: teal;
+    color:aliceblue;
     font-size: 14px;
     background: transparent;
-    border: 1px solid teal;
+    border: 1px solid rgb(206, 71, 9);
+    border-radius: 15px;
     cursor: pointer;
+}
+
+.myBtn:hover {
+    background: aliceblue;
+    color: black;
+    transform: scale(1.05);
 }

@@ -1,0 +1,8 @@
+.mySelect {
+    border-radius: 15px;
+}
+
+.mySelect:hover {
+    background: aliceblue;
+    color: black;
+}

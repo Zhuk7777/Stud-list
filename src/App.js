@@ -1,28 +1,40 @@
 import React, { useMemo, useState } from 'react';
 import './styles/App.css';
 import PostList from './components/PostList';
-import PostForm from './components/PostForm';
 import PostFilter from './components/PostFilter';
 import MyModal from './UI/modal/MyModal';
 import MyButton from './UI/button/MyButton';
+import PostForm from './components/PostForm';
+import MyEditModal from './UI/modal/MyEditModal';
 
 function App() {
   const [posts,setPosts]=useState(
     [
-      {id:1, title:'js', body:'js плох'},
-      {id:2, title:'python', body:'еще хуже'},
-      {id:3, title:'c++', body:'норм'}
+      {id: 1, name: 'Иван', surname: 'Иванов', patronymic: 'Иванович', group: '3', faculty: 'ПММ'},
+      {id: 2, name: 'Петр', surname: 'Петров', patronymic: 'Петрович', group: '5', faculty: 'ФКН'},
+      {id: 3, name: 'Антон', surname: 'Антонов', patronymic: 'Антонович', group: '1', faculty: 'РГФ'}
     ]
   )
 
-  const createPost = (newPost) =>{
-    setPosts([...posts,newPost])
-    setModal(false)
+  const [studentInfo, setStudentInfo] = useState('')
+
+  const getEditPost = (post) =>{
+    setStudentInfo(post)
   }
 
-  const removePost = (post) =>{
-    setPosts(posts.filter(p => p.id != post.id))
+  const addEditStudent = (editPost, prevId) =>{
+    setPosts([...posts, editPost].filter(p => p.id !== prevId))
+    setStudentInfo('')
+  }
 
+  const removeStudent = (post) =>{
+    setPosts(posts.filter(p => p.id !== post.id))
+
+  }
+
+  const addStudent = (newPost) =>{
+    setPosts([...posts,newPost])
+    setModal(false)
   }
 
   const [filter, setFilter] = useState({sort: '', query: ''})
@@ -39,7 +51,9 @@ function App() {
   }, [filter.sort,posts])
 
   const sortedAndSearchedPosts = useMemo(() => {
-    return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
+    return sortedPosts.filter(
+      post => [post.surname, post.name, post.patronymic].join(' ').toLowerCase().includes(filter.query.toLowerCase())
+      )
 
   }, [filter.query,sortedPosts])
 
@@ -61,14 +75,17 @@ function App() {
   return (
     <div className="App">
       <MyButton style = {{marginTop: '30px'}} onClick = {() => setModal(true)}>
-        Создать запись
+        Добавить студента
       </MyButton>
+
       <MyModal visible={modal} setVisible={setModal}>
-        <PostForm create={createPost}/>
+          <PostForm create={addStudent}/>
       </MyModal>
-      <hr style={{margin: '15px 0'}}/>
+
+      <MyEditModal create={addEditStudent} studInfo={studentInfo} setVisible={setStudentInfo}/>
+
       <PostFilter filter={filter} setFilter={setFilter}/>
-      <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список постов"/> 
+      <PostList remove={removeStudent} edit={getEditPost} posts={sortedAndSearchedPosts} title="Список студентов"/> 
     </div>
   );
 }

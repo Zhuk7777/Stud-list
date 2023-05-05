@@ -1,8 +1,13 @@
 .mySelect {
-    border-radius: 15px;
+    width: 100%;
+    border: solid 1px rgb(206, 71, 9);
+    margin: 5px 0;
+    background: rgb(39, 38, 38); 
+    color: aliceblue;
 }
 
 .mySelect:hover {
-    background: aliceblue;
-    color: black;
+    background: rgb(43, 43, 43);
+    color: aliceblue;
+    transform: scale(1.01);
 }

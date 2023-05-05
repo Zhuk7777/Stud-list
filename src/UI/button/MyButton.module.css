@@ -6,10 +6,11 @@
     border: 1px solid rgb(206, 71, 9);
     border-radius: 15px;
     cursor: pointer;
+    
 }
 
 .myBtn:hover {
-    background: aliceblue;
-    color: black;
+    background: rgb(43, 43, 43);
+    color: aliceblue;
     transform: scale(1.05);
 }

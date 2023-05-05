@@ -11,14 +11,35 @@ const PostFilter = ({filter, setFilter}) =>{
                 onChange={e => setFilter({...filter, query: e.target.value})}
                 placeholder='поиск'
             />
+
             <MySelect 
-                value={filter.sort}
-                onChange={selectedSort => setFilter({...filter, sort: selectedSort})}
-                defaultValue={'Сортировка'} 
+            value={filter.faculty}
+            onChange={f => setFilter({...filter, faculty: f})}
+            defaultValue={'Факультет'} 
+            options={
+                [
+                    {value: '', name: 'Все'},
+                    {value: 'ПММ', name: 'ПММ'},
+                    {value: 'ФКН', name: 'ФКН'},
+                    {value: 'РГФ', name: 'РГФ'},
+
+                ]}/>
+
+            <MySelect 
+                value={filter.group}
+                onChange={g => setFilter({...filter, group: g})}
+                defaultValue={'Группа'} 
                 options={
                     [
-                        {value: 'group', name: 'По группе'},
-                        {value: 'faculty', name: 'По факультету'},
+                        {value: '', name: 'Все'},
+                        {value: '1', name: '1'},
+                        {value: '2', name: '2'},
+                        {value: '3', name: '3'},
+                        {value: '4', name: '4'},
+                        {value: '5', name: '5'},
+                        {value: '6', name: '6'},
+                        {value: '7', name: '7'},
+                        {value: '8', name: '8'},
 
                     ]}/>
       </div>

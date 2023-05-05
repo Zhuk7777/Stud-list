@@ -3,4 +3,12 @@
     padding: 5px 15px;
     margin: 5px 0;
     border: 1px solid rgb(206, 71, 9);
+    background: rgb(39, 38, 38); 
+    color: aliceblue;
+}
+
+.myInput:hover {
+    background: rgb(43, 43, 43);
+    color: aliceblue;
+    transform: scale(1.01);
 }

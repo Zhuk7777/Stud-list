@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './styles/App.css';
 import PostList from './components/PostList';
 import PostFilter from './components/PostFilter';
@@ -6,15 +6,24 @@ import MyModal from './UI/modal/MyModal';
 import MyButton from './UI/button/MyButton';
 import PostForm from './components/PostForm';
 import MyEditModal from './UI/modal/MyEditModal';
+import Message from './components/message/Message';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { ref, set, get, remove } from "firebase/database";
+import database from './firebase';
+
+/*
+{id: 3, name: 'Антон', surname: 'Антонов', patronymic: 'Антонович', group: '3', faculty: 'РГФ'},
+{id: 1, name: 'Иван', surname: 'Иванов', patronymic: 'Иванович', group: '5', faculty: 'ПММ'},
+{id: 2, name: 'Петр', surname: 'Петров', patronymic: 'Петрович', group: '1', faculty: 'ФКН'},
+{id: 4, name: 'Игорь', surname: 'Сергеев', patronymic: 'Денисович', group: '3', faculty: 'ФКН'},
+{id: 5, name: 'Светлана', surname: 'Смирнова', patronymic: 'Олеговна', group: '6', faculty: 'РГФ'},
+{id: 6, name: 'Елена', surname: 'Смирнова', patronymic: 'Олеговна', group: '6', faculty: 'РГФ'}
+*/
 
 function App() {
-  const [posts,setPosts]=useState(
-    [
-      {id: 1, name: 'Иван', surname: 'Иванов', patronymic: 'Иванович', group: '3', faculty: 'ПММ'},
-      {id: 2, name: 'Петр', surname: 'Петров', patronymic: 'Петрович', group: '5', faculty: 'ФКН'},
-      {id: 3, name: 'Антон', surname: 'Антонов', patronymic: 'Антонович', group: '1', faculty: 'РГФ'}
-    ]
-  )
+
+  const [posts,setPosts]=useState([])
 
   const [studentInfo, setStudentInfo] = useState('')
 
@@ -25,37 +34,59 @@ function App() {
   const addEditStudent = (editPost, prevId) =>{
     setPosts([...posts, editPost].filter(p => p.id !== prevId))
     setStudentInfo('')
+
+    const dbRefSet = ref(database, 'posts/' + editPost.id);
+    const dbRefRemove = ref(database, 'posts/' + prevId)
+    set(dbRefSet, editPost);
+    remove(dbRefRemove);
   }
 
   const removeStudent = (post) =>{
     setPosts(posts.filter(p => p.id !== post.id))
 
+    const dbRef = ref(database, 'posts/' + post.id);
+    remove(dbRef);
+
   }
 
   const addStudent = (newPost) =>{
     setPosts([...posts,newPost])
+    
+    const dbRef = ref(database, 'posts/' + newPost.id);
+    set(dbRef, newPost);
     setModal(false)
+
+    setAddStudentMessage(true)
+    setTimeout(() => setAddStudentMessage(false), 4000);
   }
 
-  const [filter, setFilter] = useState({sort: '', query: ''})
+  const [filter, setFilter] = useState({faculty: '', group: '', query: ''})
   const [modal, setModal] = useState(false)
 
   const sortedPosts = useMemo(() => {
-    if(filter.sort)
+    let newPosts = [...posts]
+
+    if(filter.faculty)
     {
-      return [...posts].sort((a,b) => a[filter.sort].localeCompare(b[filter.sort]))
+      newPosts = newPosts.filter(p => p.faculty === filter.faculty)
     }
 
-    return posts
+    if(filter.group)
+    {
+      newPosts = newPosts.filter(p => p.group === filter.group)
+    }
+    
 
-  }, [filter.sort,posts])
+    return newPosts
+
+  }, [filter.faculty, filter.group, posts])
 
   const sortedAndSearchedPosts = useMemo(() => {
     return sortedPosts.filter(
       post => [post.surname, post.name, post.patronymic].join(' ').toLowerCase().includes(filter.query.toLowerCase())
       )
 
-  }, [filter.query,sortedPosts])
+  }, [filter.query, sortedPosts])
 
 
 
@@ -71,12 +102,28 @@ function App() {
     //поэтому мы разворачиваем посты в новый массив и сортируем его, и этот отсортированный массив передаем в setPosts
     // sort принимает callback, аргументами которого явл два элемента массива
   //}
+
+  const [addStudentMessage, setAddStudentMessage] = useState(false)
+
+  useEffect(() => {
+    const dbRef = ref(database, 'posts');
+      get(dbRef).then((data) => {
+        if (data.exists()) {
+          setPosts(Object.values(data.val()))
+        } 
+      }).catch((error) => {
+      console.error(error);
+      });
+
+  },[])
   
   return (
     <div className="App">
       <MyButton style = {{marginTop: '30px'}} onClick = {() => setModal(true)}>
-        Добавить студента
+        Добавить студента   <FontAwesomeIcon icon={faUserPlus} beat />
       </MyButton>
+
+      <Message visible={addStudentMessage}>Студент добавлен</Message>
 
       <MyModal visible={modal} setVisible={setModal}>
           <PostForm create={addStudent}/>

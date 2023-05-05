@@ -12,14 +12,6 @@ import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { ref, set, get, remove } from "firebase/database";
 import database from './firebase';
 
-/*
-{id: 3, name: 'Антон', surname: 'Антонов', patronymic: 'Антонович', group: '3', faculty: 'РГФ'},
-{id: 1, name: 'Иван', surname: 'Иванов', patronymic: 'Иванович', group: '5', faculty: 'ПММ'},
-{id: 2, name: 'Петр', surname: 'Петров', patronymic: 'Петрович', group: '1', faculty: 'ФКН'},
-{id: 4, name: 'Игорь', surname: 'Сергеев', patronymic: 'Денисович', group: '3', faculty: 'ФКН'},
-{id: 5, name: 'Светлана', surname: 'Смирнова', patronymic: 'Олеговна', group: '6', faculty: 'РГФ'},
-{id: 6, name: 'Елена', surname: 'Смирнова', patronymic: 'Олеговна', group: '6', faculty: 'РГФ'}
-*/
 
 function App() {
 
@@ -51,7 +43,7 @@ function App() {
 
   const addStudent = (newPost) =>{
     setPosts([...posts,newPost])
-    
+
     const dbRef = ref(database, 'posts/' + newPost.id);
     set(dbRef, newPost);
     setModal(false)
@@ -95,13 +87,6 @@ function App() {
   //она достает отсортированный массив их кеша, но каждый раз, когда какая-то из зависимостей меняется
   // в нашем случае [selectedSort, posts], то функция вновь пересчитывает и кеширует результат
 
-  //const sortPosts = (sort) =>{
-    //setSelectedSort(sort)
-    //setPosts([...posts].sort((a,b) => a[sort].localeCompare(b[sort])))
-    //функция сорт не возрващает отсортированный массив, а мутирует тот, к которому он был применен, а состояния напрямую изменять нельзя
-    //поэтому мы разворачиваем посты в новый массив и сортируем его, и этот отсортированный массив передаем в setPosts
-    // sort принимает callback, аргументами которого явл два элемента массива
-  //}
 
   const [addStudentMessage, setAddStudentMessage] = useState(false)
 
@@ -120,7 +105,7 @@ function App() {
   return (
     <div className="App">
       <MyButton style = {{marginTop: '30px'}} onClick = {() => setModal(true)}>
-        Добавить студента   <FontAwesomeIcon icon={faUserPlus} beat />
+        Добавить студента   <FontAwesomeIcon icon={faUserPlus} />
       </MyButton>
 
       <Message visible={addStudentMessage}>Студент добавлен</Message>

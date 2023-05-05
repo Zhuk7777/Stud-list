@@ -90,7 +90,7 @@ const MyEditModal = ({create, studInfo, setVisible}) => {
 
                     ]}/>
                     
-                <span style={{background: 'rgb(201, 72, 72)', color: 'black'}}>{error}</span><br></br>
+                <div style={{background: 'rgb(201, 72, 72)', color: 'black'}}>{error}</div>
                 <MyButton onClick={checkingCorrectness}>Изменить</MyButton>
             </form>
         </div>
